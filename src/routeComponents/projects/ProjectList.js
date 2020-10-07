@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 // Importando mensagem de erro
 import ErrorAlert from "../../components/ErrorAlert";
+
+// Modal de confirmaçāo para deletar projeto
+import ConfirmationModal from "../../components/ConfirmationModal";
+
+import api from "../../apis";
 
 class ProjectList extends Component {
   // Nosso state inicial é 1 array vazia, pois vamos ter uma lista (array) de projetos
@@ -13,14 +17,19 @@ class ProjectList extends Component {
     projects: [],
     loading: false,
     error: "",
+    showModal: false,
+    selectedRowId: "",
   };
 
   // Disparar a requisiçāo HTTP para buscar os dados no servidor assim que o componente for renderizado
 
   async componentDidMount() {
     this.setState({ loading: true });
+
+    console.log(this.props.user);
+
     try {
-      const response = await axios.get("http://localhost:4000/api/project");
+      const response = await api.get("/project");
       console.log(response);
 
       this.setState({ loading: false, projects: [...response.data] });
@@ -29,6 +38,18 @@ class ProjectList extends Component {
       this.setState({ loading: false, error: err.message });
     }
   }
+
+  componentDidUpdate() {
+    console.log(this.props.user);
+  }
+
+  handleModalToggle = (projectId) => {
+    // Retornando um objeto diretamente da arrow function
+    this.setState((prevState) => ({
+      showModal: !prevState.showModal,
+      selectedRowId: projectId,
+    }));
+  };
 
   render() {
     return (
@@ -41,6 +62,7 @@ class ProjectList extends Component {
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Title</th>
+                <th scope="col"># of Tasks</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
@@ -56,6 +78,7 @@ class ProjectList extends Component {
                         {project.title}
                       </Link>
                     </td>
+                    <td>{project.tasks.length}</td>
                     <td>
                       <Link
                         className="btn btn-primary mr-1"
@@ -63,12 +86,12 @@ class ProjectList extends Component {
                       >
                         Edit
                       </Link>
-                      <Link
+                      <button
                         className="btn btn-danger"
-                        to={`/project/delete/${project._id}`}
+                        onClick={() => this.handleModalToggle(project._id)}
                       >
                         Delete
-                      </Link>
+                      </button>
                     </td>
                   </tr>
                 );
@@ -77,6 +100,12 @@ class ProjectList extends Component {
           </table>
         )}
         {this.state.error ? <ErrorAlert error={this.state.error} /> : null}
+        <ConfirmationModal
+          id="projectDeleteConfirmationModal"
+          show={this.state.showModal}
+          handleClose={this.handleModalToggle}
+          projectId={this.state.selectedRowId}
+        />
       </div>
     );
   }

@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
+
+import TaskList from "../tasks/TaskList";
 
 class ProjectDetail extends Component {
   // 1. Onde guardar as informações
@@ -9,6 +12,7 @@ class ProjectDetail extends Component {
     description: "",
     createdAt: "",
     updatedAt: "",
+    tasks: [],
   };
 
   // 2. Obter as informações
@@ -17,7 +21,6 @@ class ProjectDetail extends Component {
 
     const response = await axios.get(`http://localhost:4000/api/project/${id}`);
 
-    console.log(response);
     this.setState({ ...response.data });
   }
 
@@ -46,6 +49,14 @@ class ProjectDetail extends Component {
           <strong>Last Updated At: </strong>
           {new Date(this.state.updatedAt).toLocaleDateString()}
         </span>
+        <Link
+          className="btn btn-primary"
+          style={{ width: "7rem" }}
+          to={`/task/new/${this.state._id}`}
+        >
+          New Task
+        </Link>
+        <TaskList match={this.props.match} tasks={this.state.tasks} />
       </div>
     );
   }

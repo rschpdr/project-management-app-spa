@@ -1,30 +1,31 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import ProjectForm from "./ProjectForm";
+import TaskForm from "./TaskForm";
 
-import LoadingSpinner from "../../components/LoadingSpinner";
+class TaskEdit extends Component {
+  // 1. Criar o state do formulario
 
-class ProjectEdit extends Component {
   state = {
     title: "",
     description: "",
+    status: "",
     error: "",
     isLoadingFetch: false,
     isLoadingSend: false,
   };
 
+  // 2. Pegar os dados existentes
+
   async componentDidMount() {
-    const { id } = this.props.match.params;
-
     this.setState({ isLoadingFetch: true });
-
     try {
-      const response = await axios.get(
-        `http://localhost:4000/api/project/${id}`
-      );
+      const { id } = this.props.match.params;
 
-      console.log(response);
+      // Buscar os dados no banco
+      const response = await axios.get(`http://localhost:4000/api/task/${id}`);
+
+      // Atualizar o state com o que buscamos no banco
       this.setState({ ...response.data, isLoadingFetch: false });
     } catch (err) {
       console.error(err);
@@ -32,14 +33,14 @@ class ProjectEdit extends Component {
     }
   }
 
-  // Atualiza o state toda vez que o usuario digitar ou apagar algo dentro dos campos do form
+  // 3. Atualizar os dados existentes
+
   handleChange = (event) => {
     this.setState({
       [event.currentTarget.name]: event.currentTarget.value,
     });
   };
 
-  // Dispara a requisiçāo HTTP para o backend com os dados do formulário
   handleSubmit = async (event) => {
     this.setState({ isLoadingSend: true });
 
@@ -49,9 +50,10 @@ class ProjectEdit extends Component {
       // Impedir comportamento padrāo do formulário
       event.preventDefault();
 
+      // 4. Disparar requisicao pro backend
       // Disparar a requisiçāo manualmente através do React
       const response = await axios.patch(
-        `http://localhost:4000/api/project/${id}`,
+        `http://localhost:4000/api/task/${id}`,
         this.state
       );
       console.log(response);
@@ -60,33 +62,25 @@ class ProjectEdit extends Component {
       this.setState({ isLoadingSend: false });
 
       // Navega programaticamente para a lista de projetos
-      this.props.match.history.push("/project/all");
+      this.props.history.goBack();
     } catch (err) {
       console.error(err);
       this.setState({ error: err.message, isLoadingSend: false });
     }
   };
 
-  // 1. Popular o formulario com os dados existentes
-
-  // 2. Enviar os dados atualizados para o servidor
-
   render() {
     return (
       <div>
-        <h1>Edit Project</h1>
-        {this.state.isLoadingFetch ? (
-          <LoadingSpinner />
-        ) : (
-          <ProjectForm
-            state={{ ...this.state, loading: this.state.isLoadingSend }}
-            handleChange={this.handleChange}
-            handleSubmit={this.handleSubmit}
-          />
-        )}
+        <h1>Edit Task</h1>
+        <TaskForm
+          state={this.state}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+        />
       </div>
     );
   }
 }
 
-export default ProjectEdit;
+export default TaskEdit;

@@ -1,36 +1,42 @@
 import React, { Component } from "react";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
 
-// Importar componente de formulario
-import ProjectForm from "./ProjectForm";
+import TaskForm from "./TaskForm";
 
-class ProjectCreate extends Component {
+class TaskCreate extends Component {
+  // 1. Gerenciar os dados do formulario
   state = {
     title: "",
     description: "",
+    status: "",
     loading: false,
     error: "",
   };
 
-  // Atualiza o state toda vez que o usuario digitar ou apagar algo dentro dos campos do form
+  // 2. Criar os handlers de evento para change e submit
+
   handleChange = (event) => {
     this.setState({
       [event.currentTarget.name]: event.currentTarget.value,
     });
   };
 
-  // Dispara a requisiçāo HTTP para o backend com os dados do formulário
   handleSubmit = async (event) => {
+    // 3. Enviar a requisicao POST pro servidor
     this.setState({ loading: true });
 
+    console.log(event);
+
     try {
+      // Extrair id do Projeto da URL
+      const { projectId } = this.props.match.params;
+
       // Impedir comportamento padrāo do formulário
       event.preventDefault();
 
       // Disparar a requisiçāo manualmente através do React
       const response = await axios.post(
-        "http://localhost:4000/api/project",
+        `http://localhost:4000/api/task/${projectId}`,
         this.state
       );
       console.log(response);
@@ -39,18 +45,20 @@ class ProjectCreate extends Component {
       this.setState({ loading: false });
 
       // Navega programaticamente para a lista de projetos
-      this.props.history.push("/project/all");
+      this.props.history.push(`/project/${projectId}`);
     } catch (err) {
       console.error(err);
       this.setState({ loading: false, error: err.message });
     }
   };
 
+  // 4. Renderiza o form na tela
+
   render() {
     return (
       <div>
-        <h1>New Project</h1>
-        <ProjectForm
+        <h1>New Task</h1>
+        <TaskForm
           state={this.state}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
@@ -60,4 +68,4 @@ class ProjectCreate extends Component {
   }
 }
 
-export default ProjectCreate;
+export default TaskCreate;
