@@ -49,6 +49,17 @@ function TaskForm(props) {
           <option value="Done">Done</option>
         </select>
       </div>
+      <div className="form-group">
+        <label htmlFor="attachmentTaskInput">Attachment</label>
+        <input
+          type="file"
+          className="form-control"
+          id="attachmentTaskInput"
+          name="attachment"
+          // Tornando input controlado
+          onChange={handleChange}
+        />
+      </div>
       {/* Renderizaçāo condicional do botāo de loading */}
       {state.loading ? (
         <LoadingButton />

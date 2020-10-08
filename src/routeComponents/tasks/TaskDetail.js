@@ -9,6 +9,7 @@ class TaskDetail extends Component {
     title: "",
     description: "",
     status: "",
+    attachmentUrl: "",
     createdAt: "",
     updatedAt: "",
   };
@@ -17,7 +18,7 @@ class TaskDetail extends Component {
 
   async componentDidMount() {
     // const taskId = useParams().id;
-    const { id } = useParams();
+    const { id } = this.props.match.params;
 
     const response = await api.get(`/task/${id}`);
 
@@ -54,6 +55,14 @@ class TaskDetail extends Component {
             <strong>Last Updated At: </strong>
             {new Date(this.state.updatedAt).toLocaleDateString()}
           </span>
+          <div className="w-50">
+            <strong>Attachment Image: </strong>
+            <img
+              alt={`${this.state.description} attachment`}
+              src={this.state.attachmentUrl}
+              className="img-fluid rounded"
+            />
+          </div>
         </div>
       </div>
     );
