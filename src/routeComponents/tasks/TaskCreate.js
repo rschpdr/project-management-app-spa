@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import api from "../../apis/";
 
 import TaskForm from "./TaskForm";
 
@@ -8,7 +8,7 @@ class TaskCreate extends Component {
   state = {
     title: "",
     description: "",
-    status: "",
+    status: "To Do",
     loading: false,
     error: "",
   };
@@ -25,8 +25,6 @@ class TaskCreate extends Component {
     // 3. Enviar a requisicao POST pro servidor
     this.setState({ loading: true });
 
-    console.log(event);
-
     try {
       // Extrair id do Projeto da URL
       const { projectId } = this.props.match.params;
@@ -34,11 +32,10 @@ class TaskCreate extends Component {
       // Impedir comportamento padrāo do formulário
       event.preventDefault();
 
+      console.log(this.state);
+
       // Disparar a requisiçāo manualmente através do React
-      const response = await axios.post(
-        `http://localhost:4000/api/task/${projectId}`,
-        this.state
-      );
+      const response = await api.post(`/task/${projectId}`, this.state);
       console.log(response);
 
       // Cancela o estado de loading

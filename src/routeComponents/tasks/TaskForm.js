@@ -35,7 +35,7 @@ function TaskForm(props) {
         ></textarea>
       </div>
       <div className="form-group">
-        <label htmlFor="descriptionTaskInput">Status</label>
+        <label htmlFor="statusTaskInput">Status</label>
         <select
           className="form-control"
           id="statusTaskInput"

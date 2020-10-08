@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import api from "../../apis/";
 
 import LoadingSpinner from "../../components/LoadingSpinner";
 
@@ -16,9 +16,7 @@ class TaskDelete extends Component {
 
     try {
       // 3. Disparar a requisicao para o servidor com a tarefa a ser deletada
-      const response = await axios.delete(
-        `http://localhost:4000/api/task/${projectId}/${id}`
-      );
+      await api.delete(`/task/${projectId}/${id}`);
 
       // 4. Volta pra lista
       this.props.history.goBack();

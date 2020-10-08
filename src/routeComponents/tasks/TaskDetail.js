@@ -1,57 +1,63 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../apis/";
 
-function TaskDetail() {
+class TaskDetail extends Component {
   // 1. Onde guardar as informações
-  const [state, setState] = useState({});
+  state = {
+    _id: "",
+    title: "",
+    description: "",
+    status: "",
+    createdAt: "",
+    updatedAt: "",
+  };
 
   // 2. Obter as informações
-  // const taskId = useParams().id;
-  const { id } = useParams();
 
-  useEffect(() => {
-    async function fetchData() {
-      const response = await axios.get(`http://localhost:4000/api/task/${id}`);
+  async componentDidMount() {
+    // const taskId = useParams().id;
+    const { id } = useParams();
 
-      setState({ ...response.data });
-    }
-    fetchData();
-  }, []);
+    const response = await api.get(`/task/${id}`);
+
+    this.setState({ ...response.data });
+  }
 
   // 3. Apresentar as informações
-
-  return (
-    <div>
-      <div className="d-flex flex-column">
-        <h1>Task Details</h1>
-        <span>
-          <strong>ID: </strong>
-          {state._id}
-        </span>
-        <span>
-          <strong>Title: </strong>
-          {state.title}
-        </span>
-        <span>
-          <strong>Description: </strong>
-          {state.description}
-        </span>
-        <span>
-          <strong>Status: </strong>
-          {state.status}
-        </span>
-        <span>
-          <strong>Creation Date: </strong>
-          {new Date(state.createdAt).toLocaleDateString()}
-        </span>
-        <span>
-          <strong>Last Updated At: </strong>
-          {new Date(state.updatedAt).toLocaleDateString()}
-        </span>
+  render() {
+    return (
+      <div>
+        <div className="d-flex flex-column">
+          <h1>Task Details</h1>
+          <span>
+            <strong>ID: </strong>
+            {this.state._id}
+          </span>
+          <span>
+            <strong>Title: </strong>
+            {this.state.title}
+          </span>
+          <span>
+            <strong>Description: </strong>
+            {this.state.description}
+          </span>
+          <span>
+            <strong>Status: </strong>
+            {this.state.status}
+          </span>
+          <span>
+            <strong>Creation Date: </strong>
+            {new Date(this.state.createdAt).toLocaleDateString()}
+          </span>
+          <span>
+            <strong>Last Updated At: </strong>
+            {new Date(this.state.updatedAt).toLocaleDateString()}
+          </span>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default TaskDetail;

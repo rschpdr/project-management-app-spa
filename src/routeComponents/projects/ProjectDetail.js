@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../../apis/";
 
 import TaskList from "../tasks/TaskList";
 
@@ -19,7 +19,7 @@ class ProjectDetail extends Component {
   async componentDidMount() {
     const { id } = this.props.match.params;
 
-    const response = await axios.get(`http://localhost:4000/api/project/${id}`);
+    const response = await api.get(`/project/${id}`);
 
     this.setState({ ...response.data });
   }

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import api from "../../apis/";
 
 // Importando botāo de loading
 import LoadingButton from "../../components/LoadingButton";
@@ -17,13 +18,6 @@ class LoginForm extends Component {
     });
   };
 
-  // Atualiza o state toda vez que o usuario digitar ou apagar algo dentro dos campos do form
-  handleChange = (event) => {
-    this.setState({
-      [event.currentTarget.name]: event.currentTarget.value,
-    });
-  };
-
   // Dispara a requisiçāo HTTP para o backend com os dados do formulário
   handleSubmit = async (event) => {
     this.setState({ loading: true });
@@ -33,18 +27,28 @@ class LoginForm extends Component {
       event.preventDefault();
 
       // Disparar a requisiçāo manualmente através do React
-      const response = await axios.post(
-        "http://localhost:4000/api/login",
-        this.state
-      );
+      const response = await api.post("/login", this.state);
       console.log(response.data);
+
+      // Atualiza o state do componente pai
       this.props.setUserState(response.data);
+
+      // Guarda os dados do usuario no computador do usuario
+      localStorage.setItem(
+        "loggedInUser",
+        JSON.stringify({
+          user: { ...response.data.user },
+          token: response.data.token,
+        })
+      );
 
       // Cancela o estado de loading
       this.setState({ loading: false });
 
       // Navega programaticamente para a lista de projetos
-      // this.props.history.push("/profile");
+      this.props.history.push("/project/all");
+      // Força um reload na página para limpar a memória do roteador
+      this.props.history.go();
     } catch (err) {
       console.error(err);
       this.setState({ loading: false, error: err.message });
@@ -90,6 +94,10 @@ class LoginForm extends Component {
           )}
           {/* Renderizaçāo condicional do alerta de erro */}
           {this.state.error ? <ErrorAlert error={this.state.error} /> : null}
+
+          <p className="mt-3">
+            Doesn't have an account? <Link to="/signup">Sign Up</Link>
+          </p>
         </form>
       </div>
     );

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import api from "../../apis/";
 
 import TaskForm from "./TaskForm";
 
@@ -23,7 +23,7 @@ class TaskEdit extends Component {
       const { id } = this.props.match.params;
 
       // Buscar os dados no banco
-      const response = await axios.get(`http://localhost:4000/api/task/${id}`);
+      const response = await api.get(`/task/${id}`);
 
       // Atualizar o state com o que buscamos no banco
       this.setState({ ...response.data, isLoadingFetch: false });
@@ -52,10 +52,7 @@ class TaskEdit extends Component {
 
       // 4. Disparar requisicao pro backend
       // Disparar a requisiçāo manualmente através do React
-      const response = await axios.patch(
-        `http://localhost:4000/api/task/${id}`,
-        this.state
-      );
+      const response = await api.patch(`/task/${id}`, this.state);
       console.log(response);
 
       // Cancela o estado de loading

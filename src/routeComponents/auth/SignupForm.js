@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import api from "../../apis/";
 
 // Importando botāo de loading
 import LoadingButton from "../../components/LoadingButton";
@@ -33,10 +34,7 @@ class SignupForm extends Component {
       event.preventDefault();
 
       // Disparar a requisiçāo manualmente através do React
-      const response = await axios.post(
-        "http://localhost:4000/api/signup",
-        this.state
-      );
+      const response = await api.post("/signup", this.state);
       console.log(response);
 
       // Cancela o estado de loading
@@ -101,6 +99,9 @@ class SignupForm extends Component {
           )}
           {/* Renderizaçāo condicional do alerta de erro */}
           {this.state.error ? <ErrorAlert error={this.state.error} /> : null}
+          <p className="mt-3">
+            Already have an account? <Link to="/login">Sign In</Link>
+          </p>
         </form>
       </div>
     );

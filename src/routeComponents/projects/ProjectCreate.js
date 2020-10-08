@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import api from "../../apis/";
 
 // Importar componente de formulario
 import ProjectForm from "./ProjectForm";
@@ -29,10 +28,7 @@ class ProjectCreate extends Component {
       event.preventDefault();
 
       // Disparar a requisiçāo manualmente através do React
-      const response = await axios.post(
-        "http://localhost:4000/api/project",
-        this.state
-      );
+      const response = await api.post("/project", this.state);
       console.log(response);
 
       // Cancela o estado de loading

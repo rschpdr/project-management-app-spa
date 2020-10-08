@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import api from "../../apis/";
 
 import ProjectForm from "./ProjectForm";
 
@@ -20,9 +20,7 @@ class ProjectEdit extends Component {
     this.setState({ isLoadingFetch: true });
 
     try {
-      const response = await axios.get(
-        `http://localhost:4000/api/project/${id}`
-      );
+      const response = await api.get(`/project/${id}`);
 
       console.log(response);
       this.setState({ ...response.data, isLoadingFetch: false });
@@ -50,17 +48,14 @@ class ProjectEdit extends Component {
       event.preventDefault();
 
       // Disparar a requisiçāo manualmente através do React
-      const response = await axios.patch(
-        `http://localhost:4000/api/project/${id}`,
-        this.state
-      );
+      const response = await api.patch(`/project/${id}`, this.state);
       console.log(response);
 
       // Cancela o estado de loading
       this.setState({ isLoadingSend: false });
 
       // Navega programaticamente para a lista de projetos
-      this.props.match.history.push("/project/all");
+      this.props.history.push("/project/all");
     } catch (err) {
       console.error(err);
       this.setState({ error: err.message, isLoadingSend: false });

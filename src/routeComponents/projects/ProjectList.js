@@ -26,21 +26,14 @@ class ProjectList extends Component {
   async componentDidMount() {
     this.setState({ loading: true });
 
-    console.log(this.props.user);
-
     try {
       const response = await api.get("/project");
-      console.log(response);
 
       this.setState({ loading: false, projects: [...response.data] });
     } catch (err) {
       console.error(err);
       this.setState({ loading: false, error: err.message });
     }
-  }
-
-  componentDidUpdate() {
-    console.log(this.props.user);
   }
 
   handleModalToggle = (projectId) => {

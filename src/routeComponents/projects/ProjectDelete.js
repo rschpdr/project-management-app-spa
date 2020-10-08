@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+import api from "../../apis/";
 
 import LoadingSpinner from "../../components/LoadingSpinner";
 
@@ -17,9 +17,7 @@ class ProjectDelete extends Component {
       const { id } = this.props.match.params;
 
       // 2. Disparar uma requisiçāo do Axios do tipo delete
-      const response = await axios.delete(
-        `http://localhost:4000/api/project/${id}`
-      );
+      const response = await api.delete(`/project/${id}`);
 
       console.log(response);
 
