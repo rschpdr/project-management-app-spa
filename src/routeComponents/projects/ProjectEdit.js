@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
+import api from "../../apis/";
 
 import ProjectForm from "./ProjectForm";
 
@@ -26,9 +26,7 @@ function ProjectEdit(props) {
     setIsLoadingFetch(true);
     (async function () {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/api/project/${id}`
-        );
+        const response = await api.get(`/project/${id}`);
 
         console.log(response);
         setIsLoadingFetch(false);
@@ -58,10 +56,7 @@ function ProjectEdit(props) {
       event.preventDefault();
 
       // Disparar a requisiçāo manualmente através do React
-      const response = await axios.patch(
-        `http://localhost:4000/api/project/${id}`,
-        state
-      );
+      const response = await api.patch(`/project/${id}`, state);
       console.log(response);
 
       // Cancela o estado de loading

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from "../../apis/";
 
 import LoadingSpinner from "../../components/LoadingSpinner";
 
@@ -22,7 +22,7 @@ function ProjectList() {
     // Immediately Invoked function expression
     (async function () {
       try {
-        const response = await axios.get("http://localhost:4000/api/project");
+        const response = await api.get("/project");
         console.log(response);
 
         setState({ ...state, loading: false, projects: [...response.data] });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../apis/";
 
 function ProjectDetail() {
   const { id } = useParams();
@@ -17,9 +17,7 @@ function ProjectDetail() {
   // 2. Obter as informações
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get(
-        `http://localhost:4000/api/project/${id}`
-      );
+      const response = await api.get(`/project/${id}`);
 
       console.log(response);
       setState({ ...response.data });
